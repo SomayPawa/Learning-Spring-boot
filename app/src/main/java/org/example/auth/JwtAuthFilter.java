@@ -35,6 +35,7 @@ public class JwtAuthFilter extends OncePerRequestFilter
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, ServletException
     {
+        System.out.println("somay");
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
