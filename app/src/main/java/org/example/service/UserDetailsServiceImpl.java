@@ -4,6 +4,7 @@ package org.example.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.example.entites.UserInfo;
+import org.example.eventProducer.UserInfoProducer;
 import org.example.model.UserInfoDto;
 import org.example.repository.UserRepository;
 import org.slf4j.Logger;
@@ -30,6 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsService
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
 
 
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
@@ -59,6 +63,8 @@ public class UserDetailsServiceImpl implements UserDetailsService
         }
         String userId = UUID.randomUUID().toString();
         userRepository.save(new UserInfo(userId, userInfoDto.getUsername(), userInfoDto.getPassword(), new HashSet<>()));
+
+        userInfoProducer.sendEventToKafka(userInfoDto);
         // pushEventToQueue
         return true;
     }
